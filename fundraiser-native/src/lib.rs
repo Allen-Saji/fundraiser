@@ -9,6 +9,8 @@ mod error;
 
 
 use instructions::*;
+#[cfg(test)]
+mod tests;
 
 solana_program::entrypoint!(process_instruction);
 pub fn process_instruction(
