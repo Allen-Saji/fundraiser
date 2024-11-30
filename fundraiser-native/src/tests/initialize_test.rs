@@ -28,6 +28,18 @@ pub fn initialize_test() {
     
     let (fundraiser, _) =
         Pubkey::find_program_address(&[b"fundraiser", &maker.to_bytes()], &program_id);
+
+    // Create fundraiser account    
+    let fundraiser_data = vec![0; Fundraiser::LEN];
+    
+    // Create fundraiser account with data
+    let fundraiser_account = AccountSharedData::from(solana_sdk::account::Account {
+        lamports: mollusk.sysvars.rent.minimum_balance(Fundraiser::LEN),
+        data: fundraiser_data,
+        owner: program_id,
+        executable: false,
+        rent_epoch: 0,
+    });
     
     // Create mint account
     let mint = Pubkey::new_from_array([0x02; 32]);
@@ -56,6 +68,7 @@ pub fn initialize_test() {
     
     // Serialize both values together
     let instruction_data = [
+        0u8.to_le_bytes().to_vec(),
         amount.to_le_bytes().to_vec(),
         time_ending.to_le_bytes().to_vec(),
     ].concat();
@@ -65,21 +78,19 @@ pub fn initialize_test() {
         &instruction_data,
         vec![
             AccountMeta::new(maker, true),  // Maker is signer
-            AccountMeta::new(fundraiser, false),  // Fundraiser is not signer
+            AccountMeta::new(fundraiser, true),  // Fundraiser is not signer
             AccountMeta::new_readonly(mint, false),  
             AccountMeta::new_readonly(system_program::ID, false)
         ],
     );
 
-    let lamports = mollusk.sysvars.rent.minimum_balance(Fundraiser::LEN);
-
     let result = mollusk.process_instruction(
         &instruction,
         &[
             (maker, maker_account),
-            (fundraiser, AccountSharedData::new(lamports, Fundraiser::LEN, &system_program::ID)),
+            (fundraiser, fundraiser_account),
             (mint, mint_account), 
-            (system_program::ID, AccountSharedData::new(0, 0, &system_program::ID)), 
+            (system_program::ID, AccountSharedData::default()), 
         ],
     );
 
