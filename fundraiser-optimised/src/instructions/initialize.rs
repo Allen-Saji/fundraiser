@@ -31,12 +31,12 @@ pub fn initialize_fundraiser(accounts: &[AccountInfo], data: &[u8]) -> ProgramRe
 
     // Copy mint_to_raise (32 bytes) from input data to account data
     unsafe {
-        *(data_ptr.add(32) as *mut Pubkey) = *(data.as_ptr() as *const Pubkey);
+        *(data_ptr.add(32) as *mut Pubkey) = *(data.as_ptr().add(32) as *const Pubkey);
     }
 
     // Copy amount_to_raise (8 bytes) from input data to account data
     unsafe {
-        *(data_ptr.add(64) as *mut u64) = *(data.as_ptr().add(32) as *const u64);
+        *(data_ptr.add(64) as *mut u64) = *(data.as_ptr().add(64) as *const u64);
     }
 
     // Initialize amount_raised (8 bytes) to 0
@@ -46,12 +46,12 @@ pub fn initialize_fundraiser(accounts: &[AccountInfo], data: &[u8]) -> ProgramRe
 
     // Copy time_started (8 bytes) from input data to account data
     unsafe {
-        *(data_ptr.add(80) as *mut i64) = *(data.as_ptr().add(40) as *const i64);
+        *(data_ptr.add(80) as *mut i64) = *(data.as_ptr().add(72) as *const i64);
     }
 
     // Copy duration (1 byte) from input data to account data
     unsafe {
-        *(data_ptr.add(88) as *mut u8) = *(data.as_ptr().add(48) as *const u8);
+        *(data_ptr.add(88) as *mut u8) = *(data.as_ptr().add(80) as *const u8);
     }
 
     Ok(())
