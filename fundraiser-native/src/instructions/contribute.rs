@@ -30,15 +30,15 @@ pub fn contribute(
     let token_program = next_account_info(accounts_iter)?;
 
 
-    // if fundraiser_account.owner != &crate::ID {
-    //     msg!("Invalid owner for fundraiser account");
-    //     return Err(ProgramError::IncorrectProgramId);
-    // }
+    if fundraiser_account.owner != &crate::ID {
+        msg!("Invalid owner for fundraiser account");
+        return Err(ProgramError::IncorrectProgramId);
+    }
 
-    // if contributor_account_info.owner != &crate::ID {
-    //     msg!("Invalid owner for contributor account");
-    //     return Err(ProgramError::IncorrectProgramId);
-    // }
+    if contributor_account_info.owner != &crate::ID {
+        msg!("Invalid owner for contributor account");
+        return Err(ProgramError::IncorrectProgramId);
+    }
 
     let mut fundraiser: Fundraiser = Fundraiser::try_from_slice(&fundraiser_account.data.borrow())?;
     let mut contributor_account: Contributor = Contributor::try_from_slice(&contributor_account_info.data.borrow())?;
