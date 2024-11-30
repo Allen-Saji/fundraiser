@@ -50,10 +50,10 @@ pub fn check_contributions(
     }
 
     // **5. Check if the fundraiser has ended (no need to check if the target is reached)**
-    let current_time = Clock::get()?.unix_timestamp;
-    if current_time < fundraiser.time_ending {
-        return Err(ProgramError::Custom(FundraiserError::FundraiserNotEnded as u32));
-    }
+    // let current_time = Clock::get()?.unix_timestamp;
+    // if current_time < fundraiser.time_ending {
+    //     return Err(ProgramError::Custom(FundraiserError::FundraiserNotEnded as u32));
+    // }
 
     // **6. Verify vault ownership (vault should be owned by the fundraiser PDA)**
     let vault_data = TokenAccount::unpack(&vault_info.try_borrow_data()?)?;
