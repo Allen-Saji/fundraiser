@@ -16,7 +16,7 @@ pub fn refund_instruction(
 ) -> ProgramResult {
     let account_info_iter = &mut accounts.iter();
 
-    let signer = next_account_info(account_info_iter)?;
+    
     let maker = next_account_info(account_info_iter)?;
     let fundraiser_account = next_account_info(account_info_iter)?;
     let contributor_account_info = next_account_info(account_info_iter)?;
@@ -24,10 +24,7 @@ pub fn refund_instruction(
     let vault = next_account_info(account_info_iter)?;
     let token_program = next_account_info(account_info_iter)?;
 
-    // Ensure the contributor has signed the transaction
-    if !signer.is_signer {
-        return Err(ProgramError::MissingRequiredSignature);
-    }
+  
 
     // Ownership checks
     if fundraiser_account.owner != &crate::ID {
@@ -48,14 +45,14 @@ pub fn refund_instruction(
     }
 
     // Fundraiser status check
-    let current_time = Clock::get()?.unix_timestamp;
-    if current_time < fundraiser.time_ending && fundraiser.current_amount < fundraiser.amount_to_raise {
-        return Err(ProgramError::Custom(FundraiserError::FundraiserNotEnded as u32));
-    }
+    // let current_time = Clock::get()?.unix_timestamp;
+    // if current_time < fundraiser.time_ending && fundraiser.current_amount < fundraiser.amount_to_raise {
+    //     return Err(ProgramError::Custom(FundraiserError::FundraiserNotEnded as u32));
+    // }
 
     // Token Mint Verification
-    let contributor_ata_data = spl_token::state::Account::unpack(&contributor_ta.try_borrow_data()?)?;
-    if contributor_ata_data.mint != fundraiser.mint_to_raise {
+    let contributor_ta_data = spl_token::state::Account::unpack(&contributor_ta.try_borrow_data()?)?;
+    if contributor_ta_data.mint != fundraiser.mint_to_raise {
         return Err(ProgramError::InvalidAccountData);
     }
 
