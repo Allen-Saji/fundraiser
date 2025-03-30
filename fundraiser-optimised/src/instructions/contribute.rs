@@ -13,10 +13,11 @@ pub fn contribute_instruction(accounts: &[AccountInfo], data: &[u8]) -> ProgramR
 
     let current_time = Clock::get()?.unix_timestamp;
     println!("current time: {:?}, fundraiser end time: {:?}", current_time, fundraiser_account.time_ending());
-    // Check if the fundraiser has ended
+    
     assert!(
-        current_time > fundraiser_account.time_ending(),
-        "Fundraiser has ended");
+        current_time <= fundraiser_account.time_ending(),
+        "Fundraiser has ended"
+    );
 
     Transfer {
         from: signer_ta,

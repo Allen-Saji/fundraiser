@@ -15,10 +15,10 @@ pub fn checker_instruction(accounts: &[AccountInfo]) -> ProgramResult {
 
     let current_time = Clock::get()?.unix_timestamp;
 
-     //  if the fundraiser has not ended, the user should not be able to withdraw funds
-     assert!(
+    assert!(
         current_time > fundraiser_account.time_ending(),
-        "You can only withdraw funds if the fundraiser has ended");
+        "You can only withdraw funds if the fundraiser has ended"
+    );
 
     Transfer {
         from: vault,
